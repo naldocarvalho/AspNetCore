@@ -5,7 +5,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.E2ETesting;
@@ -83,7 +82,7 @@ namespace Templates.Test.SpaTemplateTest
             Assert.True(0 == buildResult.ExitCode, ErrorMessages.GetFailedProcessMessage("build", Project, buildResult));
 
             // localdb is not installed on the CI machines, so skip it.
-            var shouldVisitFetchData = !useLocalDb;
+            var shouldVisitFetchData = !(useLocalDb && Project.IsCIEnvironment);
 
             if (usesAuth)
             {
