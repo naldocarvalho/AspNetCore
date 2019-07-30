@@ -41,7 +41,7 @@ namespace ComponentsApp.Server
                 endpoints.MapRazorPages();
                 endpoints.MapControllers();
                 endpoints.MapBlazorHub();
-                endpoints.MapFallbackToPage("/Index");
+                endpoints.MapFallbackToPage("/_Host");
             });
         }
     }
