@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.JSInterop;
+using Microsoft.Extensions.Options;
 
 namespace Microsoft.AspNetCore.Components.Server.Circuits
 {
@@ -23,16 +24,19 @@ namespace Microsoft.AspNetCore.Components.Server.Circuits
         private readonly ILoggerFactory _loggerFactory;
         private readonly ILogger _logger;
         private readonly CircuitIdFactory _circuitIdFactory;
+        private readonly CircuitOptions _options;
 
         public DefaultCircuitFactory(
             IServiceScopeFactory scopeFactory,
             ILoggerFactory loggerFactory,
-            CircuitIdFactory circuitIdFactory)
+            CircuitIdFactory circuitIdFactory,
+            IOptions<CircuitOptions> options)
         {
             _scopeFactory = scopeFactory ?? throw new ArgumentNullException(nameof(scopeFactory));
             _loggerFactory = loggerFactory;
             _logger = _loggerFactory.CreateLogger<CircuitFactory>();
             _circuitIdFactory = circuitIdFactory ?? throw new ArgumentNullException(nameof(circuitIdFactory));
+            _options = options.Value;
         }
 
         public override CircuitHost CreateCircuitHost(
@@ -72,6 +76,7 @@ namespace Microsoft.AspNetCore.Components.Server.Circuits
                 scope.ServiceProvider,
                 _loggerFactory,
                 rendererRegistry,
+                _options,
                 jsRuntime,
                 client,
                 encoder,

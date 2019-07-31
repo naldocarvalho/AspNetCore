@@ -140,12 +140,15 @@ namespace Microsoft.AspNetCore.Components.Server.Circuits
             }
         }
 
-        internal void SendPendingBatches()
+        internal void ResumeCircuit()
         {
             // Dispatch any buffered renders we accumulated during a disconnect.
             // Note that while the rendering is async, we cannot await it here. The Task returned by ProcessBufferedRenderBatches relies on
             // OnRenderCompleted to be invoked to complete, and SignalR does not allow concurrent hub method invocations.
-            _ = Renderer.Dispatcher.InvokeAsync(() => Renderer.ProcessBufferedRenderBatches());
+            _ = Renderer.Dispatcher.InvokeAsync(() =>
+            {
+                return Renderer.ProcessBufferedRenderBatches();
+            });
         }
 
         public async Task EndInvokeJSFromDotNet(long asyncCall, bool succeded, string arguments)
